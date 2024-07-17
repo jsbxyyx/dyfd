@@ -145,6 +145,7 @@ class Fudai:
 
     def choujiang(self):
         """默认不切换直播间"""
+        zhongjiang_count = 0
         while True:
             rect = self.check_have_fudai()
             shijian = ""
@@ -221,6 +222,17 @@ class Fudai:
 
             xy = self.zhibojieshu()
             if xy:
+                os.system(
+                    "adb -s %s shell input swipe 760 1600 760 800 200"
+                    % (self.device_id)
+                )
+                print("切换直播间")
+                time.sleep(5)
+                pass
+
+            zhongjiang_count += 1
+
+            if zhongjiang_count > 4:
                 os.system(
                     "adb -s %s shell input swipe 760 1600 760 800 200"
                     % (self.device_id)
