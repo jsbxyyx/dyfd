@@ -126,7 +126,10 @@ class Fudai:
             text = item[1][0]
             if text == "一键发表评论":
                 min_rect = cv2.minAreaRect(np.float32(item[0]))
-                return min_rect[0]
+                return (1, min_rect[0])
+            elif text == '加入粉丝团':
+                min_rect = cv2.minAreaRect(np.float32(item[0]))
+                return (0, min_rect[0])
         return None
 
     def zhibojieshu(self):
@@ -146,42 +149,61 @@ class Fudai:
             rect = self.check_have_fudai()
             shijian = ""
             shijian_seconds = -1
-            if rect:
-                os.system(
-                    "adb -s {} shell input tap {} {}".format(
-                        self.device_id, rect[0][0], rect[0][1]
-                    )
-                )  # 点击默认小福袋的位置
-                print("点击打开福袋详情")
-                time.sleep(5)
+            while True:
+                if rect:
+                    os.system(
+                        "adb -s {} shell input tap {} {}".format(
+                            self.device_id, rect[0][0], rect[0][1]
+                        )
+                    )  # 点击默认小福袋的位置
+                    print("点击打开福袋详情")
+                    time.sleep(5)
 
-                wh = rect[1]
-                w = int(wh[0])
-                h = int(wh[1])
+                    wh = rect[1]
+                    w = int(wh[0])
+                    h = int(wh[1])
 
-                xy = rect[0]
-                x = int(xy[0]) - int(w // 2)
-                y = int(xy[1]) - int(h // 2)
+                    xy = rect[0]
+                    x = int(xy[0]) - int(w // 2)
+                    y = int(xy[1]) - int(h // 2)
 
-                jietu_image = cv2.imread(jietu)
-                crop_img = jietu_image[y : y + h, x : x + w]
-                crop_img_path = "pic/fudai_crop.png"
-                cv2.imwrite(crop_img_path, crop_img)
+                    jietu_image = cv2.imread(jietu)
+                    crop_img = jietu_image[y : y + h, x : x + w]
+                    crop_img_path = "pic/fudai_crop.png"
+                    cv2.imwrite(crop_img_path, crop_img)
 
-                ocr_result = ocr_util.ocr_img(crop_img_path)
-                if ocr_result:
-                    shijian = ocr_result[0][1][0]
-                    shijian_seconds = int(shijian[0:2]) * 60 + int(shijian[3:])
+                    ocr_result = ocr_util.ocr_img(crop_img_path)
+                    if ocr_result:
+                        shijian = ocr_result[0][1][0]
+                        shijian_seconds = int(shijian[0:2]) * 60 + int(shijian[3:])
 
-            xy = self.jiaruchoujiang()
-            if xy:
-                os.system(
-                    "adb -s {} shell input tap {} {}".format(
-                        self.device_id, xy[0], xy[1]
-                    )
-                )
-                print("点击一键发表评论")
-                time.sleep(5)
+                xy = self.jiaruchoujiang()
+                if xy:
+                    if xy[0] == 1:
+                        os.system(
+                            "adb -s {} shell input tap {} {}".format(
+                                self.device_id, xy[1][0], xy[1][1]
+                            )
+                        )
+                        print("点击一键发表评论")
+                        time.sleep(5)
+                        break
+                    elif xy[0] == 0:
+                        os.system(
+                            "adb -s {} shell input tap {} {}".format(
+                                self.device_id, xy[1][0], xy[1][1]
+                            )
+                        )
+                        print("加入粉丝团")
+                        time.sleep(5)
+                        os.system(
+                            "adb -s {} shell input keyevent 4".format(
+                                self.device_id
+                            )
+                        )
+                        print('按下后退')
+                else:
+                    break
 
             if shijian_seconds != -1:
                 print("等待：" + shijian)
