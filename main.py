@@ -239,6 +239,7 @@ class Fudai:
                 )
                 print("切换直播间")
                 time.sleep(5)
+                zhongjiang_count = 0
                 pass
 
 
