@@ -55,7 +55,7 @@ class Fudai:
         self.needswitch = False
         pass
 
-    def get_screenshot(self):
+    def get_screenshot(self, tip=''):
         """截图3个adb命令需要2S左右的时间"""
         path = base_dir + "/pic"
         if not os.path.exists(path):
@@ -73,7 +73,7 @@ class Fudai:
                 shell=True,
             ).wait()
             timetag = datetime.now().strftime("%H:%M:%S")
-            print("{} 获取屏幕截图".format(timetag))
+            print("{}【{}】屏幕截图".format(timetag, tip))
             return True
         # subprocess.Popen('adb  -s %s shell rm /sdcard/DCIM/screenshot.png' % self.device_id, shell=True).wait()
         except:
@@ -87,13 +87,13 @@ class Fudai:
                 % self.device_id,
                 shell=True,
             ).wait()
-            self.get_screenshot(path)
+            self.get_screenshot()
 
     def check_have_fudai(self):
         loop = 0
         while loop < 6:  # 每3秒识别一次，最多等待18秒
             time.sleep(1.5)
-            self.get_screenshot()
+            self.get_screenshot('获取福袋')
             rect = cv_util.zhaotu(jietu, "pic/fudai.png")
             if rect is not None:
                 return rect
@@ -101,7 +101,7 @@ class Fudai:
         return None
 
     def meiyouchouzhong(self):
-        self.get_screenshot()
+        self.get_screenshot('没有抽中')
         result = ocr_util.ocr_img(jietu)
         not_fudai = False
         for idx in range(len(result)):
@@ -119,7 +119,7 @@ class Fudai:
         return None
 
     def jiaruchoujiang(self):
-        self.get_screenshot()
+        self.get_screenshot('加入抽奖')
         result = ocr_util.ocr_img(jietu)
         for idx in range(len(result)):
             item = result[idx]
@@ -136,7 +136,7 @@ class Fudai:
         return None
 
     def zhibojieshu(self):
-        self.get_screenshot()
+        self.get_screenshot('直播结束')
         result = ocr_util.ocr_img(jietu)
         for idx in range(len(result)):
             item = result[idx]
