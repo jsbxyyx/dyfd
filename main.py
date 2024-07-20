@@ -127,7 +127,7 @@ class Fudai:
             if text == "一键发表评论":
                 min_rect = cv2.minAreaRect(np.float32(item[0]))
                 return (1, min_rect[0])
-            elif text == '加入粉丝团':
+            elif text == "加入粉丝团":
                 min_rect = cv2.minAreaRect(np.float32(item[0]))
                 return (0, min_rect[0])
         return None
@@ -198,18 +198,16 @@ class Fudai:
                         print("加入粉丝团")
                         time.sleep(5)
                         os.system(
-                            "adb -s {} shell input keyevent 4".format(
-                                self.device_id
-                            )
+                            "adb -s {} shell input keyevent 4".format(self.device_id)
                         )
-                        print('按下后退')
+                        print("按下后退")
                 else:
                     break
 
             if shijian_seconds != -1:
                 if shijian_seconds > 900:
-            	    shijian_seconds = 900
-                print("等待：" + shijian + ' : ' + str(shijian_seconds))
+                    shijian_seconds = 900
+                print("等待：" + shijian + " : " + str(shijian_seconds))
                 time.sleep(shijian_seconds)
 
             xy = self.meiyouchouzhong()
