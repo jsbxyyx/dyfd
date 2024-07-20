@@ -133,6 +133,9 @@ class Fudai:
             elif text == '参与成功等待开奖':
                 min_rect = cv2.minAreaRect(np.float32(item[0]))
                 return (2, min_rect[0])
+            elif text == '活动已结束':
+                min_rect = cv2.minAreaRect(np.float32(item[0]))
+                return (3, min_rect[0])
         return None
 
     def zhibojieshu(self):
@@ -209,6 +212,13 @@ class Fudai:
                             "adb -s {} shell input keyevent 4".format(self.device_id)
                         )
                         print("参与成功等待开奖 => 后退")
+                        break
+                    elif xy[0] == 3:
+                        os.system(
+                            "adb -s {} shell input keyevent 4".format(self.device_id)
+                        )
+                        print("活动已结束 => 后退")
+                        break
                 else:
                     break
 
