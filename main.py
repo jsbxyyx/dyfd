@@ -207,7 +207,9 @@ class Fudai:
                     break
 
             if shijian_seconds != -1:
-                print("等待：" + shijian)
+                if shijian_seconds > 900:
+            	    shijian_seconds = 900
+                print("等待：" + shijian + ' : ' + str(shijian_seconds))
                 time.sleep(shijian_seconds)
 
             xy = self.meiyouchouzhong()

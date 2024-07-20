@@ -23,9 +23,9 @@ def main():
     cv2.imshow("crop", crop)
     cv2.waitKey(0)
 
-    cv2.imwrite("pic/fudai_jietu.png", crop)
+    cv2.imwrite("pic/fudai_crop.png", crop)
 
-    ocr_result = ocr_util.ocr_img("pic/fudai_jietu.png")
+    ocr_result = ocr_util.ocr_img("pic/fudai_crop.png")
     print(ocr_result)
 
     if cv2.waitKey(1) & 0xFF == ord("q"):
